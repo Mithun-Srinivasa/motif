@@ -128,6 +128,7 @@ Gemini returns 5 colors with explicit roles.
 | Surface | `surface` | Background of UI — usually light/neutral |
 | Text | `text` | Primary type color |
 | Highlight | `highlight` | The surprise — used sparingly for delight |
+| Card | `card` | The moodboard canvas backdrop — mathematically derived from primary (S=20, L=88), not from Gemini |
 
 ---
 
@@ -422,8 +423,10 @@ Get HF key: huggingface.co/settings/tokens (free, no card)
 - ✅ `globals.css` — design tokens, shimmer, fade-up, cursor-blink, grain overlay
 - ✅ `app/layout.tsx` — Cormorant Garamond + DM Sans preloaded for app chrome
 - ✅ `stripCodeFences()` — strips markdown code fences from Gemini responses before JSON parsing
-- ✅ Color palette using full-width detailed swatches (rolled back from compact left-column mode)
+- ✅ Color palette using full-width detailed swatches (rolled back from compact left-column mode, then repositioned into left column of 2-col grid below Tone of Voice)
 - ✅ "Color in Context" weighted composition section (full-width, below palette)
+- ✅ 6th "Card" swatch added — computed via `buildCardSwatch()` in `colorUtils.ts`, not sourced from Gemini
+- ✅ Palette rendered as a 3-column × 2-row CSS grid so all 6 descriptions are fully visible
 
 ### In Progress
 _(AI assistant: move items here when you start them)_
@@ -455,6 +458,10 @@ _(AI assistant: move items here when you start them)_
 | 2026-03-11 | Color palette rectangles moved from full-width section to left column of 2-col grid (balances tall images) | Yes |
 | 2026-03-11 | Added `ColorComposition` — weighted color shapes as "Color in Context" section (full-width, above typography) | Yes |
 | 2026-03-12 | Rolled back color palette to full-width detailed swatches, maintaining `ColorComposition` below it. | Yes |
+| 2026-03-14 | Moved color palette from full-width section (below images) into left column of 2-col grid in `MoodboardCanvas`, below Tone of Voice chips — now sits beside mood images as requested. | Yes |
+| 2026-03-14 | Fixed TEXT color swatch taller-than-others bug: added fixed `height: 72px` + `overflow: hidden` to the info block in `ColorSwatch.tsx`, emotion text clamped to 2 lines via `-webkit-line-clamp: 2`. Root cause: TEXT role consistently receives longer emotion descriptions from Gemini. | Yes |
+| 2026-03-14 | Added 6th "Card" swatch (`role: 'card'`) — not from Gemini, built by `buildCardSwatch()` in `colorUtils.ts`. Hex = `getCanvasBackground(palette)` (primary hue, S=20, L=88). Static name "Motif Card", static poetic description. Injected in `MoodboardCanvas` before rendering. | Yes |
+| 2026-03-14 | Palette grid changed from single flex-row to 3-column CSS grid (2 rows × 3 cols) to give each swatch enough space for full description text. Fixed-height cap and line-clamp removed from `ColorSwatch` info block; replaced with `minHeight: 80px` so all text is visible and swatches remain uniform. | Yes |
 
 ---
 
@@ -494,4 +501,4 @@ After completing your task:
 
 ## Last Updated By
 
-`Antigravity AI — 2026-03-09`
+`Antigravity AI — 2026-03-14`

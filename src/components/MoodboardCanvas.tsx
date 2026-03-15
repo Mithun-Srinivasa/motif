@@ -3,7 +3,7 @@
 import { useRef, useEffect, useCallback } from 'react';
 import type { MoodboardData, PartialMoodboardData } from '@/types';
 import { FONT_PERSONALITIES } from '@/lib/fontPersonalities';
-import { getCanvasBackground } from '@/lib/colorUtils';
+import { getCanvasBackground, buildCardSwatch } from '@/lib/colorUtils';
 import ColorSwatch from './ColorSwatch';
 import ColorComposition from './ColorComposition';
 import ToneChips from './ToneChips';
@@ -38,6 +38,11 @@ export default function MoodboardCanvas({
 
   const accentColor = data.palette?.find((c) => c.role === 'accent')?.hex ?? '#1a3a2a';
   const textColor = data.palette?.find((c) => c.role === 'text')?.hex ?? '#1c1917';
+
+  // Build the 6-swatch palette: the 5 AI colours + the computed card/backdrop swatch
+  const fullPalette = data.palette && data.palette.length > 0
+    ? [...(data.palette as import('@/types').ColorSwatch[]), buildCardSwatch(data.palette as import('@/types').ColorSwatch[])]
+    : [];
 
   // Inject personality fonts dynamically
   useEffect(() => {
@@ -150,7 +155,18 @@ export default function MoodboardCanvas({
               </div>
             )}
 
-            {/* Color palette removed from here, moved to full width below */}
+            {/* Color Palette — in left column, below Tone of Voice, beside images */}
+            {fullPalette.length > 0 && (
+              <div style={{ marginTop: '4px' }}>
+                <p style={sectionLabel}>Color Palette</p>
+                {/* 2 rows × 3 columns grid — gives each swatch room to show full description */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                  {fullPalette.map((swatch) => (
+                    <ColorSwatch key={swatch.role} swatch={swatch} size="lg" />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right: Mood images */}
@@ -169,18 +185,7 @@ export default function MoodboardCanvas({
         </div>
       )}
 
-      {/* Color Palette — full width, detailed descriptions */}
-      {data.palette && data.palette.length > 0 && (
-        <div className="fade-up">
-          <div style={divider} />
-          <p style={sectionLabel}>Color Palette</p>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            {data.palette.map((swatch) => (
-              <ColorSwatch key={swatch.role} swatch={swatch} size="lg" />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Color Palette moved into left column of the 2-col grid above */}
 
       {/* Color in Context — weighted composition */}
       {data.palette && data.palette.length >= 5 && (

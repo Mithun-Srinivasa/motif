@@ -1,6 +1,6 @@
 // ── Motif Types ────────────────────────────────────────────────
 
-export type ColorRole = 'primary' | 'accent' | 'surface' | 'text' | 'highlight';
+export type ColorRole = 'primary' | 'accent' | 'surface' | 'text' | 'highlight' | 'card';
 
 export interface ColorSwatch {
   role: ColorRole;
