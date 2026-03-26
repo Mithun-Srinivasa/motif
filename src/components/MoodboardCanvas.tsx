@@ -212,6 +212,7 @@ export default function MoodboardCanvas({
             data={data as MoodboardData}
             moodboardRef={moodboardRef}
             canvasBackground={canvasBg}
+            accentColor={accentColor}
           />
         </div>
       )}

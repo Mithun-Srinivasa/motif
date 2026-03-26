@@ -3,14 +3,17 @@
 import { useState, RefObject } from 'react';
 import type { MoodboardData } from '@/types';
 import { buildShareUrl } from '@/lib/urlEncoding';
+import { getContrastText } from '@/lib/colorUtils';
 
 interface ShareSaveBarProps {
   data: MoodboardData;
   moodboardRef: RefObject<HTMLDivElement | null>;
   canvasBackground: string;
+  accentColor?: string; // derived from palette; falls back to #1a3a2a before data loads
 }
 
-export default function ShareSaveBar({ data, moodboardRef, canvasBackground }: ShareSaveBarProps) {
+export default function ShareSaveBar({ data, moodboardRef, canvasBackground, accentColor = '#1a3a2a' }: ShareSaveBarProps) {
+  const fgColor = getContrastText(accentColor);
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -67,43 +70,43 @@ export default function ShareSaveBar({ data, moodboardRef, canvasBackground }: S
 
   return (
     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-      {/* Share Link — outlined */}
+      {/* Share Link — outlined, color derived from palette accent */}
       <button
         onClick={handleShare}
         style={{
           ...btnBase,
           background: 'transparent',
-          border: '1px solid #1a3a2a',
-          color: '#1a3a2a',
+          border: `1px solid ${accentColor}`,
+          color: accentColor,
         }}
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = '#1a3a2a';
-          (e.currentTarget as HTMLButtonElement).style.color = '#faf7f2';
+          (e.currentTarget as HTMLButtonElement).style.background = accentColor;
+          (e.currentTarget as HTMLButtonElement).style.color = fgColor;
         }}
         onMouseLeave={(e) => {
           (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-          (e.currentTarget as HTMLButtonElement).style.color = '#1a3a2a';
+          (e.currentTarget as HTMLButtonElement).style.color = accentColor;
         }}
       >
         {copied ? '✓ Copied' : 'Share Link'}
       </button>
 
-      {/* Save as PNG — filled */}
+      {/* Save as PNG — filled, color derived from palette accent */}
       <button
         onClick={handleSave}
         disabled={saving}
         style={{
           ...btnBase,
-          background: saving ? '#2d5a3d' : '#1a3a2a',
-          border: '1px solid #1a3a2a',
-          color: '#faf7f2',
+          background: accentColor,
+          border: `1px solid ${accentColor}`,
+          color: fgColor,
           opacity: saving ? 0.75 : 1,
         }}
         onMouseEnter={(e) => {
-          if (!saving) (e.currentTarget as HTMLButtonElement).style.background = '#2d5a3d';
+          if (!saving) (e.currentTarget as HTMLButtonElement).style.opacity = '0.85';
         }}
         onMouseLeave={(e) => {
-          if (!saving) (e.currentTarget as HTMLButtonElement).style.background = '#1a3a2a';
+          if (!saving) (e.currentTarget as HTMLButtonElement).style.opacity = '1';
         }}
       >
         {saving ? 'Saving…' : 'Save as PNG'}

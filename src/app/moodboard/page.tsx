@@ -8,6 +8,7 @@ import ColorSwatch from '@/components/ColorSwatch';
 import ToneChips from '@/components/ToneChips';
 import StreamingText from '@/components/StreamingText';
 import Link from 'next/link';
+import { getContrastText } from '@/lib/colorUtils';
 
 // The moodboard page — handles the streaming + sidebar + canvas layout
 // This page is reached after the landing page fires /api/generate and
@@ -198,8 +199,8 @@ function MoodboardPageInner() {
               marginTop: '12px',
               width: '100%',
               padding: '9px 0',
-              background: generating || isStreaming ? '#e7e5e4' : '#1a3a2a',
-              color: generating || isStreaming ? '#78716c' : '#faf7f2',
+              background: generating || isStreaming ? '#e7e5e4' : accentColor,
+              color: generating || isStreaming ? '#78716c' : getContrastText(accentColor),
               border: 'none',
               borderRadius: '2px',
               fontFamily: 'DM Sans, sans-serif',
