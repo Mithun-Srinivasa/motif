@@ -30,6 +30,7 @@ export default function ShareSaveBar({ data, moodboardRef, canvasBackground, acc
       const html2canvas = (await import('html2canvas')).default;
       if (!moodboardRef.current) return;
       await document.fonts.ready;
+
       const canvas = await (html2canvas as (el: HTMLElement, opts?: Record<string, unknown>) => Promise<HTMLCanvasElement>)(
         moodboardRef.current,
         {
@@ -37,8 +38,15 @@ export default function ShareSaveBar({ data, moodboardRef, canvasBackground, acc
           backgroundColor: canvasBackground,
           useCORS: true,
           allowTaint: true,
+          onclone: (clonedDoc: Document) => {
+            clonedDoc.body.classList.remove('grain');
+            const style = clonedDoc.createElement('style');
+            style.innerHTML = '* { animation: none !important; transition: none !important; }';
+            clonedDoc.head.appendChild(style);
+          }
         }
       );
+
       const blob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob((b) => resolve(b), 'image/png')
       );

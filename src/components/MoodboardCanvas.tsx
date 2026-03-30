@@ -28,9 +28,6 @@ export default function MoodboardCanvas({
   const moodboardRef = useRef<HTMLDivElement>(null);
   const fontLinkRef = useRef<HTMLLinkElement | null>(null);
 
-  const personality = data.fontPersonality
-    ? FONT_PERSONALITIES[data.fontPersonality]
-    : FONT_PERSONALITIES['editorial-luxury'];
 
   const canvasBg = data.palette && data.palette.length > 0
     ? getCanvasBackground(data.palette as MoodboardData['palette'])

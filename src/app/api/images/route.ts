@@ -1,4 +1,3 @@
-import { InferenceClient } from '@huggingface/inference';
 import { NextRequest, NextResponse } from 'next/server';
 
 const STYLE_SUFFIX =
@@ -6,22 +5,32 @@ const STYLE_SUFFIX =
 
 const TIMEOUT_MS = 25_000;
 
-async function generateImage(client: InferenceClient, prompt: string): Promise<string | null> {
+async function generateImage(apiKey: string, prompt: string): Promise<string | null> {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-    const result = await client.textToImage({
-      model: 'black-forest-labs/FLUX.1-schnell',
-      inputs: prompt + STYLE_SUFFIX,
+    const model = 'black-forest-labs/FLUX.1-schnell';
+    const url = `https://router.huggingface.co/hf-inference/models/${model}`;
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ inputs: prompt + STYLE_SUFFIX }),
+      signal: controller.signal
     });
 
     clearTimeout(timer);
 
-    // The SDK types textToImage as string|Blob depending on response_format;
-    // with no response_format specified it returns a Blob at runtime.
-    const blob = result as unknown as Blob;
-    const buffer = await blob.arrayBuffer();
+    if (!res.ok) {
+      console.error('HF API Error:', res.status, await res.text());
+      return null;
+    }
+
+    const buffer = await res.arrayBuffer();
     const base64 = Buffer.from(buffer).toString('base64');
     return `data:image/png;base64,${base64}`;
   } catch (err) {
@@ -43,11 +52,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'HF_API_KEY not configured' }, { status: 500 });
     }
 
-    const client = new InferenceClient(apiKey);
-
     // Fire all image requests in parallel
     const images = await Promise.all(
-      prompts.map((prompt: string) => generateImage(client, prompt))
+      prompts.map((prompt: string) => generateImage(apiKey, prompt))
     );
 
     return NextResponse.json({ images });

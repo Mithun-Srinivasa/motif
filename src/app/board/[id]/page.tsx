@@ -21,7 +21,7 @@ export default function BoardPage({ params }: PageProps) {
       const decoded = decodeMoodboard(id);
       setData(decoded);
 
-      // Regenerate images on share link open
+      // Only regenerate images if prompts were included in the share data
       if (decoded.imagePrompts && decoded.imagePrompts.length > 0) {
         fetch('/api/images', {
           method: 'POST',

@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Motif — Turn a feeling into a design direction',
+  title: 'Motif: Turn a feeling into a design direction',
   description:
     'An AI creative brief generator. Type your project vibe and get a streaming moodboard with colors, typography, tone of voice, and mood images.',
   keywords: ['creative brief', 'moodboard generator', 'AI design', 'brand identity', 'color palette'],
   authors: [{ name: 'Mithun Srinivasa' }],
   openGraph: {
-    title: 'Motif — Turn a feeling into a design direction',
+    title: 'Motif: Turn a feeling into a design direction',
     description: 'AI creative brief generator. Vibe → Moodboard.',
     type: 'website',
   },

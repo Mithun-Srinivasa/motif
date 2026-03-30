@@ -62,14 +62,16 @@ export default function ColorSwatch({ swatch, size = 'lg' }: ColorSwatchProps) {
         <p style={{ color: '#1c1917', fontSize: '12px', fontWeight: 500, fontFamily: 'DM Sans, sans-serif', marginBottom: '4px' }}>
           {name}
         </p>
-        <p style={{
-          color: '#78716c',
-          fontSize: '11px',
-          fontFamily: 'DM Sans, sans-serif',
-          lineHeight: 1.5,
-        }}>
-          {emotion}
-        </p>
+        {emotion && (
+          <p style={{
+            color: '#78716c',
+            fontSize: '11px',
+            fontFamily: 'DM Sans, sans-serif',
+            lineHeight: 1.5,
+          }}>
+            {emotion}
+          </p>
+        )}
       </div>
     </div>
   );

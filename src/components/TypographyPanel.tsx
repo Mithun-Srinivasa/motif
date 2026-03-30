@@ -64,17 +64,18 @@ export default function TypographyPanel({ fonts }: TypographyPanelProps) {
           >
             The quick brown fox jumps over the lazy dog
           </p>
-          {/* Rationale */}
-          <p
-            style={{
-              fontFamily: 'DM Sans, sans-serif',
-              fontSize: '11px',
-              color: '#78716c',
-              lineHeight: 1.6,
-            }}
-          >
-            {font.rationale}
-          </p>
+          {font.rationale && (
+            <p
+              style={{
+                fontFamily: 'DM Sans, sans-serif',
+                fontSize: '11px',
+                color: '#78716c',
+                lineHeight: 1.6,
+              }}
+            >
+              {font.rationale}
+            </p>
+          )}
         </div>
       ))}
     </div>
