@@ -81,6 +81,7 @@ export default function ShareSaveBar({ data, moodboardRef, canvasBackground, acc
       {/* Share Link — outlined, color derived from palette accent */}
       <button
         onClick={handleShare}
+        aria-label="Share moodboard link"
         style={{
           ...btnBase,
           background: 'transparent',
@@ -103,6 +104,7 @@ export default function ShareSaveBar({ data, moodboardRef, canvasBackground, acc
       <button
         onClick={handleSave}
         disabled={saving}
+        aria-label="Export moodboard as a PNG image"
         style={{
           ...btnBase,
           background: accentColor,

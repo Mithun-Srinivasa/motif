@@ -241,6 +241,7 @@ export default function LandingPage() {
               onKeyDown={handleKey}
               rows={3}
               placeholder="Describe a project vibe, a feeling, a brand..."
+              aria-label="Project Vibe Description"
               style={{
                 width: '100%',
                 background: 'transparent',
@@ -277,6 +278,7 @@ export default function LandingPage() {
               <button
                 id="generate-btn"
                 onClick={handleGenerate}
+                aria-label="Generate an AI driven creative brief"
                 style={{
                   background: isGlass ? 'white' : '#1a3a2a',
                   color: isGlass ? '#1a3a2a' : '#faf7f2',

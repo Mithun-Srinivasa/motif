@@ -13,6 +13,7 @@ It is built with a heavy focus on high-quality UI/UX aesthetics, responsive layo
 
 - **Generative UI Streaming:** Watch your design system come to life in real-time. Instead of a standard loading spinner, Motif streams the generated text, color palettes, and typographic rationale into the UI as it parses the AI response.
 - **Strict Data Validation:** Employs `zod` schema parsing at the network edge to strictly typecast and validate AI responses before they interact with the React component tree.
+- **Accessibility & Contrast Engine:** Utilizes `chroma-js` to mathematically derive dynamic background tints and enforce WCAG AA contrast standards. Features widespread `aria-live` tags and semantic properties ensuring screen reader support during live generative streams.
 - **Resilient Fallbacks:** Implements custom Next.js Error Boundaries ensuring continuous uptime and graceful UI degradation if downstream LLM APIs hallucinate or time out.
 - **Dynamic Image Integration:** Leverages cutting-edge image models (`FLUX.1-schnell`) to actively generate contextual mood images based on the requested vibe.
 - **Client-Side URL Compression:** Allows users to easily share full moodboards without server-side storage overhead. Motif uses `lz-string` and payload stripping to package the entire board directly into a highly compressed, shareable URL.
@@ -27,6 +28,7 @@ It is built with a heavy focus on high-quality UI/UX aesthetics, responsive layo
   - **Google Gemini API** (`@google/generative-ai`) for robust language and design reasoning.
   - **Hugging Face Serverless Inference** for generating fast, highly-aesthetic mood pictures.
 - **Data & Safety:** `zod` for zero-trust runtime schema validation of AI payloads.
+- **Accessibility:** `chroma-js` for dynamic color mathematics, high-fidelity ARIA markup for streaming contexts.
 - **Utilities:** `html2canvas` for precise layout capturing, `lz-string` for extreme URL state compression.
 
 ## Getting Started

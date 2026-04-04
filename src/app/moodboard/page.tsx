@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { type MoodboardData, type PartialMoodboardData, MoodboardDataSchema } from '@/types';
+import { type PartialMoodboardData, MoodboardDataSchema } from '@/types';
 import MoodboardCanvas from '@/components/MoodboardCanvas';
 import ColorSwatch from '@/components/ColorSwatch';
 import ToneChips from '@/components/ToneChips';
@@ -23,7 +23,6 @@ function MoodboardPageInner() {
   const [data, setData] = useState<PartialMoodboardData>({});
   const [images, setImages] = useState<(string | null)[]>([null, null]);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
   const [newVibe, setNewVibe] = useState('');
   const [generating, setGenerating] = useState(false);
   const hasFiredRef = useRef(false);
@@ -35,7 +34,6 @@ function MoodboardPageInner() {
 
   const streamBrief = useCallback(async (vibeText: string) => {
     setIsStreaming(true);
-    setIsComplete(false);
     setData({});
     setImages([null, null]);
 
@@ -73,7 +71,6 @@ function MoodboardPageInner() {
         const finalParsed = MoodboardDataSchema.parse(parsedRaw);
         
         setData(finalParsed);
-        setIsComplete(true);
         setIsStreaming(false);
 
         // Fire image generation once we have prompts
@@ -89,7 +86,6 @@ function MoodboardPageInner() {
         }
       } catch {
         setIsStreaming(false);
-        setIsComplete(true);
       }
     } catch {
       setIsStreaming(false);
@@ -177,6 +173,7 @@ function MoodboardPageInner() {
             }}
             rows={2}
             placeholder="New project vibe…"
+            aria-label="New Project Vibe Description"
             style={{
               width: '100%',
               background: 'transparent',
@@ -196,6 +193,7 @@ function MoodboardPageInner() {
           <button
             onClick={handleNewBrief}
             disabled={generating || isStreaming}
+            aria-label="Generate replacement brief"
             style={{
               marginTop: '12px',
               width: '100%',
