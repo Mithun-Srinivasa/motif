@@ -17,28 +17,41 @@ export default function BoardPage({ params }: PageProps) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      const decoded = decodeMoodboard(id);
-      setData(decoded);
+    let mounted = true;
+    
+    const load = async () => {
+      try {
+        const decoded = decodeMoodboard(id);
+        if (!mounted) return;
+        setData(decoded);
 
-      // Only regenerate images if prompts were included in the share data
-      if (decoded.imagePrompts && decoded.imagePrompts.length > 0) {
-        fetch('/api/images', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompts: decoded.imagePrompts }),
-        })
-          .then((r) => r.json())
-          .then((d) => {
-            if (d.images) setImages(d.images);
+        // Only regenerate images if prompts were included in the share data
+        if (decoded.imagePrompts && decoded.imagePrompts.length > 0) {
+          fetch('/api/images', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompts: decoded.imagePrompts }),
           })
-          .catch(() => {
-            // Graceful degradation — shimmer stays
-          });
+            .then((r) => r.json())
+            .then((d) => {
+              if (!mounted) return;
+              if (d.images) setImages(d.images);
+            })
+            .catch(() => {
+              // Graceful degradation — shimmer stays
+            });
+        }
+      } catch {
+        if (!mounted) return;
+        setError(true);
       }
-    } catch {
-      setError(true);
-    }
+    };
+    
+    load();
+    
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
   if (error) {

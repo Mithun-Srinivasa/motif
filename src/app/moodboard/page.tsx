@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import type { MoodboardData, PartialMoodboardData } from '@/types';
+import { type MoodboardData, type PartialMoodboardData, MoodboardDataSchema } from '@/types';
 import MoodboardCanvas from '@/components/MoodboardCanvas';
 import ColorSwatch from '@/components/ColorSwatch';
 import ToneChips from '@/components/ToneChips';
@@ -24,7 +24,6 @@ function MoodboardPageInner() {
   const [images, setImages] = useState<(string | null)[]>([null, null]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [vibe, setVibe] = useState('');
   const [newVibe, setNewVibe] = useState('');
   const [generating, setGenerating] = useState(false);
   const hasFiredRef = useRef(false);
@@ -68,7 +67,11 @@ function MoodboardPageInner() {
       // Final full parse
       try {
         const clean = stripCodeFences(accumulated);
-        const finalParsed: MoodboardData = JSON.parse(clean.trim());
+        const parsedRaw = JSON.parse(clean.trim());
+        
+        // Zod validation acts as our strict safety net
+        const finalParsed = MoodboardDataSchema.parse(parsedRaw);
+        
         setData(finalParsed);
         setIsComplete(true);
         setIsStreaming(false);
@@ -96,7 +99,6 @@ function MoodboardPageInner() {
   useEffect(() => {
     if (searchVibe && !hasFiredRef.current) {
       hasFiredRef.current = true;
-      setVibe(searchVibe);
       streamBrief(searchVibe);
     }
   }, [searchVibe, streamBrief]);
@@ -105,7 +107,6 @@ function MoodboardPageInner() {
     const trimmed = newVibe.trim();
     if (!trimmed) return;
     setGenerating(true);
-    setVibe(trimmed);
     setNewVibe('');
     await streamBrief(trimmed);
     setGenerating(false);

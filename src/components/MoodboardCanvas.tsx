@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 import type { MoodboardData, PartialMoodboardData } from '@/types';
 import { FONT_PERSONALITIES } from '@/lib/fontPersonalities';
 import { getCanvasBackground, buildCardSwatch } from '@/lib/colorUtils';
